@@ -1,101 +1,82 @@
 package tests;
 
+import com.aventstack.extentreports.Status;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class LoginTests extends BaseTest {
 
-    // Test 1: Valid login test
     @Test(priority = 1)
     public void testSuccessfulLogin() {
-        System.out.println("Test 1: Starting successful login test");
-
+        test.log(Status.INFO, "Navigating to Login Page");
         loginPage.goToLoginPage();
+
+        test.log(Status.INFO, "Performing login with standard_user");
         loginPage.login("standard_user", "secret_sauce");
 
-        // Verify navigation to products page
-        boolean isOnProducts = productsPage.isOnProductsPage();
-        Assert.assertTrue(isOnProducts, "Login failed - not on products page");
+        Assert.assertTrue(productsPage.isOnProductsPage(), "Login failed - not on products page");
+        Assert.assertEquals(productsPage.getPageTitle(), "Products");
 
-        String title = productsPage.getPageTitle();
-        Assert.assertEquals(title, "Products");
-
-        System.out.println("Login successful!");
+        test.log(Status.PASS, "Successfully redirected to Products page");
     }
 
-    // Test 2: Invalid password test
     @Test(priority = 2)
     public void testWrongPassword() {
-        System.out.println("Test 2: Starting incorrect password test");
-
+        test.log(Status.INFO, "Navigating to Login Page");
         loginPage.goToLoginPage();
+
+        test.log(Status.INFO, "Entering wrong credentials");
         loginPage.login("standard_user", "wrong_password");
 
-        // Error message should be visible
         Assert.assertTrue(loginPage.isErrorDisplayed(), "Error message not displayed");
+        Assert.assertTrue(loginPage.isOnLoginPage(), "User should still be on Login Page");
 
-        // Should remain on the login page
-        Assert.assertTrue(loginPage.isOnLoginPage());
-
-        System.out.println("Incorrect password test passed");
+        test.log(Status.PASS, "Incorrect password handled correctly");
     }
 
-    // Test 3: Empty username test
     @Test(priority = 3)
     public void testEmptyUsername() {
-        System.out.println("Test 3: Starting empty username test");
-
+        test.log(Status.INFO, "Navigating to Login Page");
         loginPage.goToLoginPage();
+
+        test.log(Status.INFO, "Entering only password and clicking login");
         loginPage.enterPassword("secret_sauce");
         loginPage.clickLoginButton();
 
-        // Verify error display
-        Assert.assertTrue(loginPage.isErrorDisplayed());
+        Assert.assertTrue(loginPage.isErrorDisplayed(), "Error message missing for empty username");
+        Assert.assertTrue(loginPage.getErrorMessage().contains("Username is required"));
 
-        String errorText = loginPage.getErrorMessage();
-        Assert.assertTrue(errorText.contains("Username is required"));
-
-        System.out.println("Empty username test passed");
+        test.log(Status.PASS, "Empty username validation passed");
     }
 
-    // Test 4: Verify products display
     @Test(priority = 4)
     public void testProductsShown() {
-        System.out.println("Test 4: Verifying products are displayed");
-
+        test.log(Status.INFO, "Performing valid login");
         loginWithValidUser();
 
+        test.log(Status.INFO, "Verifying product visibility");
         Assert.assertTrue(productsPage.isOnProductsPage());
-
         int count = productsPage.getProductCount();
-        System.out.println("Product count: " + count);
 
+        test.log(Status.INFO, "Product count found: " + count);
         Assert.assertTrue(count > 0, "No products found on page");
 
-        System.out.println("Product display test passed");
+        test.log(Status.PASS, "Products are displayed correctly");
     }
 
-    // Test 5: Add to cart and logout test
     @Test(priority = 5)
     public void testAddCartAndLogout() {
-        System.out.println("Test 5: Add to cart and logout flow");
-
+        test.log(Status.INFO, "Logging in and adding first product to cart");
         loginWithValidUser();
-
-        // Add the first product
         productsPage.addFirstProductToCart();
 
-        // Verify cart badge shows 1
-        String cartCount = productsPage.getCartCount();
-        Assert.assertEquals(cartCount, "1");
-        System.out.println("Product added to cart");
+        test.log(Status.INFO, "Checking cart badge");
+        Assert.assertEquals(productsPage.getCartCount(), "1");
 
-        // Perform logout
+        test.log(Status.INFO, "Logging out from the application");
         productsPage.logout();
 
-        // Verify redirection to login page
-        Assert.assertTrue(loginPage.isOnLoginPage());
-
-        System.out.println("Add to cart and logout test passed");
+        Assert.assertTrue(loginPage.isOnLoginPage(), "Redirection to login page failed after logout");
+        test.log(Status.PASS, "Cart flow and logout successful");
     }
 }

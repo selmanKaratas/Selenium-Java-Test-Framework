@@ -5,48 +5,45 @@
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <!-- Proje Bilgileri / Project Information -->
   <groupId>com.testautomation</groupId>
   <artifactId>SeleniumTestFramework</artifactId>
   <version>1.0-SNAPSHOT</version>
   <name>Selenium Test Automation Framework</name>
 
-  <!-- Java Versiyonu / Java Version -->
   <properties>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
-  <!-- Bağımlılıklar / Dependencies -->
   <dependencies>
-    <!-- Selenium WebDriver - Tarayıcı otomasyonu için / For browser automation -->
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
       <version>4.15.0</version>
     </dependency>
 
-    <!-- TestNG - Test framework'ü / Test framework -->
     <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
       <version>7.8.0</version>
-      <scope>test</scope>
     </dependency>
 
-    <!-- WebDriverManager - Driver yönetimi için / For driver management -->
     <dependency>
       <groupId>io.github.bonigarcia</groupId>
       <artifactId>webdrivermanager</artifactId>
       <version>5.6.2</version>
     </dependency>
+
+    <dependency>
+      <groupId>com.aventstack</groupId>
+      <artifactId>extentreports</artifactId>
+      <version>5.1.0</version>
+    </dependency>
   </dependencies>
 
-  <!-- Build Ayarları / Build Settings -->
   <build>
     <plugins>
-      <!-- Maven Surefire Plugin - Testleri çalıştırmak için / To run tests -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
