@@ -1,19 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-
-<suite name="Selenium Test Automation Suite" verbose="1">
-
-    <!--
-    Test - Determines which tests will run
-    -->
-    <test name="Login Functionality Tests">
+<suite name="Sauce Demo - Full Regression" verbose="1" preserve-order="true">
+    <test name="Regression Tests">
         <classes>
-            <!--
-            Run all tests in LoginTests class
-            -->
-            <class name="tests.LoginTests"/>
+            <class name="tests.LoginTests" />
+            <class name="tests.ShoppingTests" />
+            <class name="tests.EndToEndTests" />
         </classes>
     </test>
-
 </suite>
-

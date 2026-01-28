@@ -3,81 +3,42 @@ package pages;
 import base.BasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import java.util.List;
+import org.openqa.selenium.support.ui.Select;
 
 public class ProductsPage extends BasePage {
-
-    // Elements
-    private By pageTitle = By.className("title");
-    private By cartIcon = By.className("shopping_cart_link");
-    private By allProducts = By.className("inventory_item");
-    private By addToCartBtns = By.cssSelector("button[id^='add-to-cart']");
+    private By title = By.className("title");
     private By cartBadge = By.className("shopping_cart_badge");
+    private By addButtons = By.cssSelector("button[id^='add-to-cart']");
+    private By sortDropdown = By.className("product_sort_container");
     private By menuBtn = By.id("react-burger-menu-btn");
     private By logoutBtn = By.id("logout_sidebar_link");
+    private By cartLink = By.className("shopping_cart_link");
 
-    public ProductsPage(WebDriver driver) {
-        super(driver);
+    public ProductsPage(WebDriver driver) { super(driver); }
+
+    public boolean isOnProductsPage() { return getText(title).equals("Products"); }
+
+    public void addFirstToCart() {
+        driver.findElements(addButtons).get(0).click();
     }
 
-    // Check if on products page
-    public boolean isOnProductsPage() {
-        try {
-            String title = getText(pageTitle);
-            return title.equals("Products");
-        } catch (Exception e) {
-            return false;
+    public void addMultipleToCart(int count) {
+        for(int i=0; i<count; i++) {
+            driver.findElements(addButtons).get(i).click();
         }
     }
 
-    // Get page title
-    public String getPageTitle() {
-        return getText(pageTitle);
+    public String getCartCount() { return isDisplayed(cartBadge) ? getText(cartBadge) : "0"; }
+
+    public void selectSort(String option) {
+        Select select = new Select(driver.findElement(sortDropdown));
+        select.selectByVisibleText(option);
     }
 
-    // Get total number of products on the page
-    public int getProductCount() {
-        List<WebElement> products = driver.findElements(allProducts);
-        return products.size();
-    }
+    public void clickCart() { click(cartLink); }
 
-    // Add first product to cart
-    public void addFirstProductToCart() {
-        List<WebElement> buttons = driver.findElements(addToCartBtns);
-        if (buttons.size() > 0) {
-            buttons.get(0).click();
-        }
-    }
-
-    // Read the product count from the cart badge
-    public String getCartCount() {
-        try {
-            return getText(cartBadge);
-        } catch (Exception e) {
-            return "0"; // Returns 0 if cart is empty and badge is missing
-        }
-    }
-
-    // Click on cart icon
-    public void clickCart() {
-        click(cartIcon);
-    }
-
-    // Open side menu
-    public void openMenu() {
-        click(menuBtn);
-        // Small wait for menu to animate
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Perform logout flow
     public void logout() {
-        openMenu();
+        click(menuBtn);
         click(logoutBtn);
     }
 }
